@@ -1,90 +1,76 @@
-# MK-AmmoBoxes by [McKleans-Scripts](https://mckleans-scripts.tebex.io/) | [Discord](https://discord.gg/DEWp9TP7p6) | [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J3J1LMXYK)
+# |‾‾‾|/‾‾‾\ /‾‾‾\
+#   |  \__‾‾\\__‾‾\
+#   |   |___/ |___/
+# tinysprite.dev
 
-This script allows you to sell bulk ammo. Why not sell a box a box of ammo and have your players unpack their ammo.
+# [`tss-ammoboxes`] by [TinySprite](https://tinysprite.dev/) | [Discord](https://discord.gg/ZMFfC54FdJ)
 
+Sell your ammo in bulk. Players buy an ammo box and unpack it into ammo, one use at a time.
 
-## Updated ##
-v1.0 - Created by McKleans-Scripts
- - Created May 2023
+---
 
-v1.1 - oosayeroo update
- - Config options
-   - You can now add your ammo to the config
- - Cleaned up Client
- - Cleaned up Server
- - Thanks to Oosayeroo for this update
+## 📦 Dependencies
+- [tss_bridge](https://github.com/TinySpriteScripts/tss_bridge) (**required**) - handles framework, inventory, notify and progressbar
 
- v1.2 - Thank Sayer
-  - Give Ammo Fix
+Works with any framework and inventory supported by `tss_bridge` (QBCore, Qbox, ESX / qb-inventory, ox_inventory, ...).
 
+---
 
-## Dependencies  ##
-- [QBCore Framework](https://github.com/qbcore-framework/qb-core)
+## 🧰 Installation
 
-[Preview](https://youtu.be/Z7QYdG9dJKU)
+> **This script requires [`tss_bridge`](https://github.com/TinySpriteScripts/tss_bridge).** Start your framework and inventory, then `tss_bridge`, then `tss-ammoboxes`.
 
-## Key Features ##
- - McKleans Inspired
- - Bulk Ammo Buying
-   + Set Ammo boxes to have set amount of ammo
+1. Place `tss-ammoboxes` in your `[tinysprite]` folder and make sure it starts after `tss_bridge`:
+   ```cfg
+   ensure tss_bridge
+   ensure [tinysprite]
+   ```
+2. Add the ammo box items to your inventory (examples below). Each box in `Config.AmmoBoxes` must exist as a **useable** item.
+3. Adjust `config.lua` - ammo type and amount per box, number of uses (`DefaultUses`), unpacking time and animation.
 
-## To Setup ##
- 1. Create a file called `[scripts]` in your resource file
-  1a. ensure `[scripts]` in your `server.cfg`
- 2. then create a file called `[mckleans]` in your `[scripts]` file
- 3. and place `mk-ammoboxes` in your `[mckleans]` file
-
-## Step 4
-
-Add to your Items.lua
+### qb-inventory (`qb-core/shared/items.lua`)
 ```lua
-["pistolammobox"]			    = {["name"] = "pistolammobox", 			  	["label"] = "Pistol Ammo Box", 		["weight"] = 200, 		["decay"] = nil,	["type"] = "item", 		["image"] = "919mm_box.png", 			["created"] = nil, 		["delete"] = true,		["unique"] = false, 	["useable"] = true, 	["shouldClose"] = true,   ["combinable"] = nil,   ["description"] = "Bulk Pistol Ammo" },
-["smgammobox"]			    = {["name"] = "smgammobox", 			  	["label"] = "SMG Ammo Box", 		["weight"] = 200, 		["decay"] = nil,	["type"] = "item", 		["image"] = "919mm_box.png", 			["created"] = nil, 		["delete"] = true,		["unique"] = false, 	["useable"] = true, 	["shouldClose"] = true,   ["combinable"] = nil,   ["description"] = "Bulk SMG Ammo" },
+pistolammobox  = { name = 'pistolammobox',  label = 'Pistol Ammo Box',  weight = 200, type = 'item', image = 'pistol_ammo.png',  unique = false, useable = true, shouldClose = true, description = 'Bulk Pistol Ammo' },
+smgammobox     = { name = 'smgammobox',     label = 'SMG Ammo Box',     weight = 200, type = 'item', image = 'smg_ammo.png',     unique = false, useable = true, shouldClose = true, description = 'Bulk SMG Ammo' },
+rifleammobox   = { name = 'rifleammobox',   label = 'Rifle Ammo Box',   weight = 200, type = 'item', image = 'rifle_ammo.png',   unique = false, useable = true, shouldClose = true, description = 'Bulk Rifle Ammo' },
+shotgunammobox = { name = 'shotgunammobox', label = 'Shotgun Ammo Box', weight = 200, type = 'item', image = 'shotgun_ammo.png', unique = false, useable = true, shouldClose = true, description = 'Bulk Shotgun Ammo' },
+sniperammobox  = { name = 'sniperammobox',  label = 'Sniper Ammo Box',  weight = 200, type = 'item', image = 'rifle_ammo.png',   unique = false, useable = true, shouldClose = true, description = 'Bulk Sniper Ammo' },
 ```
 
-## Step 5
-
-Go to jim-shops / qb-shops and add
-
+### ox_inventory (`ox_inventory/data/items.lua`)
 ```lua
-		["weapons"] = {
-			{ name = "weapon_knife", 	price = 100, amount = 250, },
-			{ name = "weapon_bat", 		price = 100, amount = 250, },
-			{ name = "weapon_hatchet",	price = 150, amount = 250, },
-			{ name = "weapon_pistol", 	price = 2500, amount = 50, requiresLicense = true },
-			{ name = "pistol_ammo", 	price = 150, amount = 250, requiresLicense = true },
-			{ name = "pistolammobox", 	price = 600, amount = 250, info = { uses = 4 }, requiresLicense = true }, -- < Add this line here
-		},
+['pistolammobox']  = { label = 'Pistol Ammo Box',  weight = 200, stack = true, close = true, description = 'Bulk Pistol Ammo' },
+['smgammobox']     = { label = 'SMG Ammo Box',     weight = 200, stack = true, close = true, description = 'Bulk SMG Ammo' },
+['rifleammobox']   = { label = 'Rifle Ammo Box',   weight = 200, stack = true, close = true, description = 'Bulk Rifle Ammo' },
+['shotgunammobox'] = { label = 'Shotgun Ammo Box', weight = 200, stack = true, close = true, description = 'Bulk Shotgun Ammo' },
+['sniperammobox']  = { label = 'Sniper Ammo Box',  weight = 200, stack = true, close = true, description = 'Bulk Sniper Ammo' },
 ```
 
-## Step 6
+### Shops
+Add the boxes to any shop like a normal item. New boxes start with `Config.DefaultUses` uses, so no `info`/metadata is needed. To sell a box with a different number of uses, give it `uses` metadata, e.g. `info = { uses = 8 }` (qb) / `metadata = { uses = 8 }` (ox).
 
-Add the following to your `inventory/html/js/app.js` search for harness and apply it there
+No inventory HTML or server edits are needed. Opened boxes are split off from the stack and show their remaining uses in their description.
 
-```lua
-		// ---------- mk-ammoboxes vvvv 
-        } else if (itemData.name == "pistolammobox") {
-            $(".item-info-title").html("<p>" + itemData.label + "</p>");
-            $(".item-info-description").html(
-                "<p>" + itemData.info.uses + " uses left.</p>"
-            );
-        } else if (itemData.name == "smgammobox") {
-            $(".item-info-title").html("<p>" + itemData.label + "</p>");
-            $(".item-info-description").html(
-                "<p>" + itemData.info.uses + " uses left.</p>"
-            );
-        // ---------- mk-ammoboxes ^^^^
-```
+---
 
-## Step 7
+## ✨ Features
+ - Bulk ammo boxes that are unpacked one use at a time
+ - Configurable ammo type, ammo per use and number of uses per box
+ - Configurable unpacking time and animation
+ - Server-side validation of every unpack (box must still be in the same slot, unpack time must have passed)
+ - English and Dutch locales (`Config.Lan`)
 
-Add the following to your `inventory/server/main.lua` search for harness and apply it there
+---
 
-```lua
-		---------- mk-ammoboxes vvvv 
-        elseif itemData["name"] == "pistolammobox" then
-			info.uses = 4
-		elseif itemData["name"] == "smgammobox" then
-			info.uses = 4
-        ---------- mk-ammoboxes ^^^^
-```
+## 📜 History
+- v1.0 - Created as MK-AmmoBoxes by McKleans-Scripts (May 2023)
+- v1.1 - Config options and cleanup, thanks to Oosayeroo
+- v1.2 - Give ammo fix, thanks to Sayer
+- v2.0.0 - Rebuilt as TSS-AmmoBoxes on `tss_bridge` (multi-framework/inventory support, server-validated unpacking, per-box uses without inventory edits)
+
+---
+
+## 🔧 Support
+Need help? Join our Discord: [Join Support Server](https://discord.gg/ZMFfC54FdJ)
+
+**© TinySprite** — Quality resources built for FiveM servers.

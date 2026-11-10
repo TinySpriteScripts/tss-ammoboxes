@@ -2,17 +2,24 @@ fx_version "cerulean"
 game "gta5"
 lua54 'yes'
 
-name "MK-AmmoBoxes"
-author "McKleans-Scripts - https://discord.gg/DEWp9TP7p6"
-version "v1.1"
-description "AmmoBoxes By McKleans-Scripts"
+name "TSS-AmmoBoxes"
+author "TinySprite"
+description "Bulk ammo boxes that players unpack into ammo"
+version "2.0.0"
+discord "https://discord.gg/ZMFfC54FdJ"
+tebex "https://tinysprite.dev/"
 
-client_scripts { 'client/*.lua', }
-server_scripts { 'server/*.lua', }
+dependency "tss_bridge"
+
 shared_scripts {
-    '@qb-core/shared/locale.lua',
-	'locales/en.lua',
+    'locales/*.lua',
     'config.lua',
 }
 
-dependency '/assetpacks'
+client_scripts {
+    'client/*.lua',
+}
+
+server_scripts {
+    'server/*.lua',
+}

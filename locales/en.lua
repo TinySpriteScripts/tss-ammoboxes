@@ -1,29 +1,16 @@
-local Translations = {
-    Notification = {
-        info = "Info",
-        warning = "Warning",
-        success = "Success",
-        error = "Error",
-    },
-    info = {
+Loc = Loc or {}
 
-    },
-    warning = {
-
-    },
-    success = {
-
+Loc["en"] = {
+    progress = {
+        unpacking = "Unpacking Ammo",
     },
     error = {
-        
-    },
-    prog = {
-        name = "Unpacking Ammo",
         cancelled = "Cancelled",
+        cantcarry = "You can't carry any more ammo",
+        missingbox = "The ammo box is no longer in your inventory",
+    },
+    success = {
+        unpacked = "Unpacked %dx %s (%d uses left)",
+        empty = "Unpacked %dx %s, the box is now empty",
     },
 }
-
-Lang = Locale:new({
-    phrases = Translations,
-    warnOnMissing = true
-})

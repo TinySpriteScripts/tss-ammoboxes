@@ -1,25 +1,38 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+---@type TSSClientModules
+local TSS = exports.tss_bridge:GetModules({ 'ProgressBar', 'Notify' }, {
+    Notify = Config.TSS.Notify, ProgressBar = Config.TSS.ProgressBar, Debug = Config.Debug,
+})
 
-local AmmoBox = 4
-local AmmoBoxData = {}
+local resource = GetCurrentResourceName()
+local busy = false
 
-RegisterNetEvent('mk-ammoboxes:AmmoBoxProg', function(ItemData,ammo,ItemName)
-    QBCore.Functions.Progressbar('McKlean-Progbar', Lang:t('prog.name'), Config.ProgBar, false, false, {
-        disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true,
-    }, {
-        animDict = Config.AnimDict, anim = Config.Anim, animflag = 8,
-    }, {}, {}, function()  
-        TriggerServerEvent("mk-ammoboxes:AddAmmo",ammo)
-        AmmoBox = ItemData.info.uses
-        AmmoBoxData = ItemData
-        TriggerServerEvent("mk-ammoboxes:RemoveUse", AmmoBox, AmmoBoxData,ItemName)
-        ClearPedTasks(PlayerPedId())
-    end, function()
-        TriggerEvent('inventory:client:busy:status', false)
-        QBCore.Functions.Notify(Lang:t('prog.cancelled'), 'error')
-    end)
-end)
+local function L(section, key)
+    local lang = Loc[Config.Lan] or Loc.en
+    return lang[section] and lang[section][key] or key
+end
 
-RegisterNetEvent('mk-ammoboxes:UpdateAmmoBox', function(AmmoBox)
-    hp = AmmoBox
+-- Sent by the server when a player uses an ammo box; the server decides the duration.
+RegisterNetEvent(resource .. ':client:Unpack', function(duration)
+    if busy then return end
+    busy = true
+
+    local anim = Config.Animation
+    local success = TSS.ProgressBar.Start({
+        label = L('progress', 'unpacking'),
+        duration = duration,
+        canCancel = true,
+        disableMovement = true,
+        disableCarMovement = true,
+        disableCombat = true,
+        dict = anim.dict,
+        anim = anim.clip,
+        flag = anim.flag,
+    })
+    ClearPedTasks(PlayerPedId())
+
+    TriggerServerEvent(resource .. ':server:FinishUnpack', success == true)
+    if not success then
+        TSS.Notify.Send({ message = L('error', 'cancelled'), type = 'error' })
+    end
+    busy = false
 end)
